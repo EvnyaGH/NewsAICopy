@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Generic, TypeVar
 
 from pydantic import BaseModel
+from pydantic.generics import GenericModel
 
 
 T = TypeVar("T")
@@ -20,4 +21,3 @@ class ErrorResponse(BaseModel):
 
 
 __all__ = ["SuccessResponse", "ErrorResponse"]
-

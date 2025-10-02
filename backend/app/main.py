@@ -2,20 +2,21 @@ from __future__ import annotations
 
 import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
-from starlette.middleware import Middleware
-from sqlalchemy import text
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
+from starlette.middleware import Middleware
+from starlette.middleware.errors import ServerErrorMiddleware
+
+import app.db.session as db_session
 from app.api.routes import api_router
+from app.exceptions.exception_handlers import register_exception_handlers, server_error_handler
+from app.middleware import RequestContextMiddleware, SessionMiddleware
+from app.shared.cache import init_redis, close_redis
 from app.shared.config import settings, Settings
 from app.shared.logging_config import setup_logging
-from app.middleware import RequestContextMiddleware, SessionMiddleware
 from app.shared.telemetry import init_otel
-from app.exceptions.exception_handlers import register_exception_handlers, server_error_handler
-from starlette.middleware.errors import ServerErrorMiddleware
-import app.db.session as db_session
-from fastapi.middleware.cors import CORSMiddleware
-from app.shared.cache import init_redis, close_redis
 
 DESCRIPTION = (
     "NewsAI backend serves resources over a clean FastAPI API. "
@@ -27,6 +28,8 @@ TAGS_METADATA = [
     {"name": "health", "description": "Service health endpoints."},
     {"name": "users", "description": "Operations to manage users."},
     {"name": "auth", "description": "Authentication: Simple JWT (login/logout)."},
+    {"name": "fields", "description": "Fetch fields and sub-fields."},
+    {"name": "interests", "description": "Fetch user's interested fields and sub-fields."},
 ]
 
 

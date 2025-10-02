@@ -58,4 +58,3 @@ __pycache__/
 .pytest_cache/
 backend/.mypy_cache/
 backend/uv.lock
-ai-engine/docker-compose.yml

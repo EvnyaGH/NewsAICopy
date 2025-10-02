@@ -7,7 +7,6 @@ from fastapi import Depends
 from app.exceptions.exceptions import EmailVerificationError
 from app.models.user import User
 from app.repositories.user_repository import UserRepository, get_user_repository
-from app.schemas.user import UserUpdate
 from app.services.email_service import EmailService, get_email_service
 
 

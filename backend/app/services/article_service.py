@@ -1,5 +1,6 @@
 from app.models.article import Article
-from app.repositories.article_repository import ArticleRepository
+from fastapi import Depends
+from app.repositories.article_repository import ArticleRepository, get_article_repository
 
 
 class ArticleService:
@@ -16,5 +17,5 @@ class ArticleService:
 		return None
 
 
-def get_article_service(article_repo: ArticleRepository) -> ArticleService:
+def get_article_service(article_repo: ArticleRepository = Depends(get_article_repository)) -> ArticleService:
 	return ArticleService(article_repo)

@@ -14,7 +14,7 @@ class RegisterRequest(BaseModel):
     last_name: str
     password: str
     display_name: str
-    roles: list[str]
+    # roles: list[str]
 
 
 class VerifyEmailRequest(BaseModel):
