@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #2563eb;
+            color: #ffffff;
+            padding: 16px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .content {
+            padding: 24px;
+            color: #212529;
+        }
+
+        .content p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #2563eb;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #6c757d;
+            padding: 16px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        Verify Your Email
+    </div>
+    <div class="content">
+        <p>Hello,</p>
+        <p>
+            Thanks for signing up! Please confirm your email address by clicking
+            the button below:
+        </p>
+        <p style="text-align: center;">
+            <a href="{{verification_link}}" class="btn" target="_blank">
+                Verify Email
+            </a>
+        </p>
+        <p>
+            Or copy and paste this link into your browser:<br/>
+            <a href="{{verification_link}}" target="_blank">{{verification_link}}</a>
+        </p>
+        <p>
+            If you didn’t create an account, you can safely ignore this email.
+        </p>
+    </div>
+    <div class="footer">
+        &copy; {{year}} YourApp Inc. All rights reserved.
+    </div>
+</div>
+</body>
+</html>

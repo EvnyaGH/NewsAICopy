@@ -1,0 +1,8 @@
+{
+  "CONFIG_PATH": "config.yaml",
+  "ARXIV_QUERY": "cat:cs.LG",
+  "ARXIV_START": "0",
+  "ARXIV_MAX_RESULTS": "50",
+  "ARXIV_EXTRACT_TEXT": "false",
+  "POSTGRES_URL": "postgresql+psycopg2://airflow:airflow@postgres:5432/airflow"
+}

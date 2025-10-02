@@ -1,0 +1,68 @@
+# --- OS / Editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.ropeproject/
+.direnv/
+
+# --- Python bytecode / caches ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.hypothesis/
+.nox/
+.tox/
+.pyre/
+
+# --- Packaging / build ---
+build/
+dist/
+wheels/
+pip-wheel-metadata/
+*.egg-info/
+.eggs/
+MANIFEST
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+
+# --- Environment variables ---
+.env
+.env.*
+!.env.example
+
+# --- Coverage / reports ---
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+reports/
+
+# --- Logs / runtime ---
+*.log
+logs/
+celerybeat-schedule
+celerybeat.pid
+
+# --- PyInstaller ---
+*.manifest
+*.spec
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Local data / cache ---
+instance/
+.cache/
+
+# Note: keep lockfiles (e.g., uv.lock, poetry.lock) tracked
+# uv.lock
+# poetry.lock
+certs

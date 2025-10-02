@@ -1,2 +1,52 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Ensure shell scripts always use LF line endings on all platforms
+*.sh text eol=lf
+
+# Ensure other script files use LF line endings
+*.bash text eol=lf
+*.zsh text eol=lf
+
+# Docker-related files should also use LF
+Dockerfile text eol=lf
+*.dockerfile text eol=lf
+docker-compose*.yml text eol=lf
+docker-entrypoint.sh text eol=lf
+
+# SQL files should use LF
+*.sql text eol=lf
+
+# Python files (standard text handling with LF)
+*.py text eol=lf
+
+# JavaScript/TypeScript files
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+
+# YAML files
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Markdown and documentation
+*.md text eol=lf
+*.txt text eol=lf
+
+# Configuration files
+*.conf text eol=lf
+*.config text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+*.toml text eol=lf
+
+# Prevent binary files from being modified
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.db binary
