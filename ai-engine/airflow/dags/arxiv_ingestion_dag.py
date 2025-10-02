@@ -105,7 +105,7 @@ with DAG(
     dag_id="arxiv_ingestion_dag",
     description="Fetch arXiv feed and persist metadata with atomic, idempotent upserts.",
     start_date=datetime(2025, 9, 1),
-    schedule_interval="@daily",          # Daily ingestion; switch to @once/manual for bulk
+    schedule="@daily",                   # Daily ingestion; switch to @once/manual for bulk
     catchup=False,
     default_args=default_args,
     tags=["arxiv", "etl", "metadata"],
