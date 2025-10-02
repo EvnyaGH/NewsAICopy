@@ -1,0 +1,4 @@
+# Additional runtime deps required for arxiv_ingestion_dag
+xmltodict>=0.13
+psycopg2-binary>=2.9
+PyYAML>=6.0
