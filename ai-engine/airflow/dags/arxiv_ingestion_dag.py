@@ -20,20 +20,42 @@
 #   the DAG will try to build a SQLAlchemy URL from this connection.
 
 import os
-import json
+import importlib
+from functools import lru_cache
 from datetime import datetime, timedelta
 from typing import Any, Dict, List
 
 from airflow import DAG
 from airflow.decorators import task
 from airflow.models import Variable
-from airflow.exceptions import AirflowSkipException
+from airflow.exceptions import AirflowException, AirflowSkipException
 from airflow.hooks.base import BaseHook
 
-# We import the utility functions from your repository modules
-# Make sure these files are available in PYTHONPATH inside the Airflow containers.
-from test_arXiv import load_config, fetch_and_parse, normalize_entries
-from utils.persistence import save_papers
+
+@lru_cache
+def _get_etl_module():
+    """Lazy-load the arXiv ETL helpers so DAG parsing works without extras."""
+    try:
+        return importlib.import_module("test_arXiv")
+    except ModuleNotFoundError as exc:  # pragma: no cover - protective guard
+        raise AirflowException(
+            "Module 'test_arXiv' is required by arxiv_ingestion_dag but is not "
+            "available in the Airflow image. Install the ETL dependencies "
+            "(xmltodict, requests, PyYAML, etc.) inside the scheduler/worker "
+            "environment."
+        ) from exc
+
+
+@lru_cache
+def _get_persistence_module():
+    """Lazy-load persistence utilities while providing a helpful error message."""
+    try:
+        return importlib.import_module("utils.persistence")
+    except ModuleNotFoundError as exc:  # pragma: no cover - protective guard
+        raise AirflowException(
+            "Module 'utils.persistence' is missing. Ensure the ai-engine/utils "
+            "package is on PYTHONPATH inside the Airflow container."
+        ) from exc
 
 
 def _get_bool(var_name: str, default: bool) -> bool:
@@ -83,7 +105,7 @@ with DAG(
     dag_id="arxiv_ingestion_dag",
     description="Fetch arXiv feed and persist metadata with atomic, idempotent upserts.",
     start_date=datetime(2025, 9, 1),
-    schedule_interval="@daily",          # Daily ingestion; switch to @once/manual for bulk
+    schedule="@daily",                   # Daily ingestion; switch to @once/manual for bulk
     catchup=False,
     default_args=default_args,
     tags=["arxiv", "etl", "metadata"],
@@ -96,7 +118,8 @@ with DAG(
         Returns the effective config dict.
         """
         cfg_path = Variable.get("CONFIG_PATH", default_var="config.yaml")
-        cfg = load_config(cfg_path)
+        etl = _get_etl_module()
+        cfg = etl.load_config(cfg_path)
 
         # Apply hot overrides
         q = Variable.get("ARXIV_QUERY", default_var=None)
@@ -132,7 +155,8 @@ with DAG(
         """
         Fetch Atom feed and return raw entries.
         """
-        entries = fetch_and_parse(cfg)
+        etl = _get_etl_module()
+        entries = etl.fetch_and_parse(cfg)
         # Small guard: skip DAG if nothing fetched
         if not entries:
             raise AirflowSkipException("No entries fetched from arXiv.")
@@ -143,7 +167,8 @@ with DAG(
         """
         Normalize raw entries into records expected by save_papers().
         """
-        records = normalize_entries(entries, cfg)
+        etl = _get_etl_module()
+        records = etl.normalize_entries(entries, cfg)
         if not records:
             raise AirflowSkipException("No records after normalization.")
         return records
@@ -154,7 +179,8 @@ with DAG(
         Persist records with atomic, idempotent upsert. Returns saved count.
         """
         pg_url = cfg.get("database", {}).get("postgres_url") or resolve_postgres_url()
-        save_papers(pg_url, records)
+        persistence = _get_persistence_module()
+        persistence.save_papers(pg_url, records)
         return len(records)
 
     # Task wiring

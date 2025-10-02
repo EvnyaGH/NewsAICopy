@@ -41,6 +41,10 @@ RUN pip install --no-cache-dir \
 # Install FAB auth manager separately to handle Flask version conflicts (like POC)
 RUN pip install --no-cache-dir apache-airflow-providers-fab
 
+# Install lightweight ETL dependencies required during DAG parsing/runtime
+COPY --chown=airflow:root ./airflow/requirements-etl.txt /opt/airflow/requirements-etl.txt
+RUN pip install --no-cache-dir -r /opt/airflow/requirements-etl.txt
+
 
 # Copy application code
 COPY --chown=airflow:root ./airflow/dags /opt/airflow/dags/
