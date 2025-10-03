@@ -104,7 +104,7 @@ async def register(
 		email_verified_at=None,
 	)
 
-	roles = ["reader"]
+	roles = request.roles or ["reader"]
 	await user_service.register(user, roles=roles)
 
 	return

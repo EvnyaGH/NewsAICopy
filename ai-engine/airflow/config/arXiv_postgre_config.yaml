@@ -1,0 +1,55 @@
+# ==============================================
+# ArXiv + PostgreSQL Ingestion Configuration
+# ==============================================
+
+arxiv:
+  # Base API URL (default arXiv API endpoint)
+  base_url: "http://export.arxiv.org/api/query"
+
+  # Either provide a full search_query or just categories
+  # Example: "cat:cs.AI" fetches all cs.AI category papers
+  search_query: "cat:cs.AI"
+
+  # Alternatively, you can just provide a category (search_query will be auto-generated)
+  # categories: "cs.AI"
+
+  # Starting index for results (pagination support)
+  start: 0
+
+  # Maximum number of results to fetch per run
+  max_results: 25
+
+  # Batch size (redundant with max_results, but kept for compatibility)
+  batch_size: 25
+
+  # Request timeout in seconds
+  timeout: 15
+
+  # Whether to download and extract text from PDF (requires PyPDF2)
+  extract_text: false
+
+
+postgres:
+  # PostgreSQL connection URL in SQLAlchemy / psycopg2 format
+  # Format: postgresql://username:password@host:port/database
+  url: "postgresql://user:password@localhost:5432/arxivdb"
+
+
+# DAG schedule interval (in hours)
+schedule_hours: 24
+
+
+# Field mapping between arXiv XML fields and our database schema
+# The left-hand side is the key we want in our dict,
+# the right-hand side is the path in the arXiv Atom feed XML.
+# These keys should match the columns we insert into PostgreSQL.
+field_mapping:
+  id: "id"                                 # arXiv paper ID
+  title: "title"                           # Title of the paper
+  summary: "summary"                       # Abstract
+  authors: "author.name"                   # List of authors
+  published: "published"                   # Publication date
+  updated: "updated"                       # Last updated date
+  pdf_url: "link[@type='application/pdf']" # PDF download URL
+  primary_field_id: "arxiv:primary_category.@term"   # Main arXiv category
+  categories: "category.@term"             # All assigned categories

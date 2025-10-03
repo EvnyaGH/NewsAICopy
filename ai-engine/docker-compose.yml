@@ -59,17 +59,17 @@ x-airflow-common: &airflow-common
     ENABLE_MONITORING: ${ENABLE_MONITORING:-true}
 
   volumes:
-    - ${PWD}/airflow/dags:/opt/airflow/dags
-    - ${PWD}/airflow/logs:/opt/airflow/logs
-    - ${PWD}/airflow/config:/opt/airflow/config
-    - ${PWD}/airflow/plugins:/opt/airflow/plugins
-    - ${PWD}/airflow/variables:/opt/airflow/variables
-    - ${PWD}/data:/opt/airflow/data
-    - ${PWD}/database:/opt/airflow/database
-    - ${PWD}/../database:/opt/airflow/shared_migrations  # External shared database folder
-    - ${PWD}/services:/opt/airflow/services
-    - ${PWD}/config:/opt/airflow/config_app
-    - ${PWD}/utils:/opt/airflow/utils
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/logs:/opt/airflow/logs
+    - ./airflow/config:/opt/airflow/config
+    - ./airflow/plugins:/opt/airflow/plugins
+    - ./airflow/variables:/opt/airflow/variables
+    - ./data:/opt/airflow/data
+    - ./database:/opt/airflow/database
+    - ./../database:/opt/airflow/shared_migrations  # External shared database folder
+    - ./services:/opt/airflow/services
+    - ./config:/opt/airflow/config_app
+    - ./utils:/opt/airflow/utils
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on: &airflow-common-depends-on
     postgres:
@@ -91,7 +91,7 @@ services:
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d
-      - ${PWD}/../database:/shared_migrations:ro  # External shared SQL migrations
+      - ./../database:/shared_migrations:ro  # External shared SQL migrations
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "zara_user", "-d", "postgres"]
       interval: 10s
@@ -232,7 +232,7 @@ services:
       _PIP_ADDITIONAL_REQUIREMENTS: ""
     user: "0:0"
     volumes:
-      - ${PWD}:/sources
+      - .:/sources
 
   airflow-cli:
     <<: *airflow-common

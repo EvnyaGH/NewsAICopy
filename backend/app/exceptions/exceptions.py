@@ -48,7 +48,3 @@ class EmailVerificationError(APIError):
 class EmailVerificationNotVerified(APIError):
     status_code = 401
     title = "EmailVerificationNotVerified"
-
-class DuplicateInterestError(APIError):
-    status_code = 409
-    title = "DuplicateInterestError"

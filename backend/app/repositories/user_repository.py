@@ -2,14 +2,15 @@ from __future__ import annotations
 
 import logging
 import uuid
+from datetime import datetime
 
-from fastapi import Depends
-from sqlalchemy import select, update
 from sqlalchemy.orm import Session
+from sqlalchemy import select, update
+from fastapi import Depends
 
-from app.api.deps.db import get_db
-from app.models.role import Role, UserRole
 from app.models.user import User
+from app.models.role import Role, UserRole
+from app.api.deps import get_db
 
 
 class UserRepository:
@@ -30,6 +31,8 @@ class UserRepository:
             .where(UserRole.user_id == user_id)
         ).all()
         return [r[0] for r in rows]
+
+    import logging
 
     def insert_user(self, user: User, roles: list[str]) -> None:
         """Create a new user and assign roles."""
